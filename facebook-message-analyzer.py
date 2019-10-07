@@ -147,9 +147,52 @@ def plot(chat_number):
     plot_histogram_time(chat_number)
     plot_histogram_words(chat_number)
 
-
-# In[ ]:
-
-
+# In[13]:
 plot(0)
+
+# In[14]:
+def top_active(top_n):
+    top_chats = [];
+
+    for i in range(top_n):
+        name = sorted_chats[i]
+        messages = final_data_messages[i]
+        total_message = 0
+        for message in messages:
+            total_message += messages[message]
+        user_message = messages.get('Bowen Chen')
+        if user_message == None:
+            user_participation = 0
+        else:
+            user_participation = user_message / total_message
+        top_chats.append((name[1], user_participation))
+    
+    return top_chats
+
+# In[15]:
+top_active(20)
+
+# In[16]:
+def time_of_day(chat_number):
+    timestamps = []
+    messages = sorted_chats[chat_number][2]
+    name = sorted_chats[chat_number][1]
+    for message in messages:
+        timestamp = message['timestamp_ms']
+        time_data = datetime.datetime.fromtimestamp(timestamp/1000.0)
+        hour = time_data.hour
+        timestamps.append(hour)
+    return sorted_chats[chat_number]
+    pl.xlabel('Time')
+    pl.ylabel('Number of Messages')
+    pl.title('# of Messages Over Time')
+    colors = ['b', 'r', 'c', 'm', 'y', 'k', 'w', 'g']
+    pl.hist(timestamps, 100, alpha=0.3, label=name, facecolor=colors[i % len(colors)])
+    pl.legend()
+    pl.xticks(rotation=90)
+    pl.tight_layout()
+    pl.show()
+
+# In[17]:
+time_of_day(10)
 
